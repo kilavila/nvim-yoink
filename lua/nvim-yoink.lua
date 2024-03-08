@@ -43,7 +43,7 @@ local function open_window()
     col = col
   }
 
-  local border_title = ' Timer '
+  local border_title = ' Yoinks '
   local border_lines = { '╭' .. border_title .. string.rep('─', win_width - string.len(border_title)) .. '╮' }
   local middle_line = '│' .. string.rep(' ', win_width) .. '│'
   for _ = 1, win_height do
@@ -81,9 +81,8 @@ local function save_yoink()
 end
 
 local function select_yoink()
-end
-
-local function paste_yoink()
+  local current_line = api.nvim_get_current_line()
+  current_yoink = current_line
 end
 
 local function close_window()
@@ -122,6 +121,16 @@ local function set_mappings()
     api.nvim_buf_set_keymap(buf, 'n', v:upper(), '', { nowait = true, noremap = true, silent = true })
     api.nvim_buf_set_keymap(buf, 'n', '<c-' .. v .. '>', '', { nowait = true, noremap = true, silent = true })
   end ]]
+end
+
+local function paste_yoink()
+  if window_open then
+    local current_line = api.nvim_get_current_line()
+    close_window()
+    api.nvim_put({ current_line }, '', true, true)
+  else
+    api.nvim_put({ current_yoink }, '', true, true)
+  end
 end
 
 local function open_yoink()

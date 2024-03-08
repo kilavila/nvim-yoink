@@ -15,7 +15,7 @@ local function open_window()
   local border_buf = api.nvim_create_buf(false, true)
 
   api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-  api.nvim_buf_set_option(buf, 'filetype', 'yoink')
+  api.nvim_buf_set_option(buf, 'filetype', 'bufferlist')
 
   local width = api.nvim_get_option("columns")
   local height = api.nvim_get_option("lines")
@@ -66,6 +66,25 @@ local function update()
   api.nvim_buf_set_option(buf, 'modifiable', true)
 end
 
+local function save()
+  local current_mode = vim.api.nvim_get_mode().mode
+
+  if current_mode == 'n' or current_mode == 'i' then
+    local current_line = api.nvim_get_current_line()
+    table.insert(yoinks, current_line)
+    print('yoinking current line')
+  elseif current_mode == 'v' then
+    -- get visual selection
+    local v = api.nvim_get_vvar('visual_selection')
+    print(v)
+  end
+end
+
+local function select()
+  local current_line = api.nvim_get_current_line()
+  current_yoink = current_line
+end
+
 local function close_window()
   if not window_open then
     return
@@ -88,39 +107,10 @@ local function set_mappings()
   }
 
   for k, v in pairs(mappings) do
-    api.nvim_buf_set_keymap(buf, 'n', k, ':lua require"nvim-quicknav".' .. v .. '<cr>', {
+    api.nvim_buf_set_keymap(buf, 'n', k, ':lua require"nvim-yoink".' .. v .. '<cr>', {
       nowait = true, noremap = true, silent = true
     })
   end
-
-  --[[ local other_chars = {
-    'a', 'b', 'c', 'e', 'f', 'g', 'i', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-  }
-
-  for _, v in ipairs(other_chars) do
-    api.nvim_buf_set_keymap(buf, 'n', v, '', { nowait = true, noremap = true, silent = true })
-    api.nvim_buf_set_keymap(buf, 'n', v:upper(), '', { nowait = true, noremap = true, silent = true })
-    api.nvim_buf_set_keymap(buf, 'n', '<c-' .. v .. '>', '', { nowait = true, noremap = true, silent = true })
-  end ]]
-end
-
-local function save()
-  local current_mode = vim.api.nvim_get_mode().mode
-
-  if current_mode == 'n' or current_mode == 'i' then
-    local current_line = api.nvim_get_current_line()
-    table.insert(yoinks, current_line)
-    print('yoinking current line')
-  elseif current_mode == 'v' then
-    -- get visual selection
-    local v = api.nvim_get_vvar('visual_selection')
-    print(v)
-  end
-end
-
-local function select()
-  local current_line = api.nvim_get_current_line()
-  current_yoink = current_line
 end
 
 local function paste()

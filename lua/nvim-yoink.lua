@@ -97,7 +97,7 @@ end
 local function select()
   local current_line = api.nvim_get_current_line()
   close_window()
-  api.nvim_put({current_line}, 'l', true, true)
+  api.nvim_put({current_line}, '', true, true)
 end
 
 local function yoink_all()

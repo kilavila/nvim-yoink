@@ -74,9 +74,9 @@ local function save_yoink()
     table.insert(yoinks, current_line)
     print('yoinking current line')
   elseif current_mode == 'v' then
-    local lines = api.nvim_buf_get_lines(0, vim.api.nvim_win_get_cursor(0)[1] - 1, vim.api.nvim_win_get_cursor(0)[1], true)
-    table.insert(yoinks, table.concat(lines, '\n'))
-    print('yoinking selected lines')
+    -- get visual selection
+    local v = api.nvim_get_vvar('visual_selection')
+    print(v)
   end
 end
 

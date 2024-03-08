@@ -15,7 +15,7 @@ local function open_window()
   local border_buf = api.nvim_create_buf(false, true)
 
   api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-  api.nvim_buf_set_option(buf, 'filetype', 'bufferlist')
+  api.nvim_buf_set_option(buf, 'filetype', 'yoink')
 
   local width = api.nvim_get_option("columns")
   local height = api.nvim_get_option("lines")
@@ -59,30 +59,11 @@ local function open_window()
   api.nvim_win_set_option(win, 'cursorline', true)
 end
 
-local function update_view()
+local function update()
   api.nvim_buf_set_option(buf, 'modifiable', true)
 
   api.nvim_buf_set_lines(buf, 0, -1, false, yoinks)
   api.nvim_buf_set_option(buf, 'modifiable', true)
-end
-
-local function save_yoink()
-  local current_mode = vim.api.nvim_get_mode().mode
-
-  if current_mode == 'n' or current_mode == 'i' then
-    local current_line = api.nvim_get_current_line()
-    table.insert(yoinks, current_line)
-    print('yoinking current line')
-  elseif current_mode == 'v' then
-    -- get visual selection
-    local v = api.nvim_get_vvar('visual_selection')
-    print(v)
-  end
-end
-
-local function select_yoink()
-  local current_line = api.nvim_get_current_line()
-  current_yoink = current_line
 end
 
 local function close_window()
@@ -123,7 +104,26 @@ local function set_mappings()
   end ]]
 end
 
-local function paste_yoink()
+local function save()
+  local current_mode = vim.api.nvim_get_mode().mode
+
+  if current_mode == 'n' or current_mode == 'i' then
+    local current_line = api.nvim_get_current_line()
+    table.insert(yoinks, current_line)
+    print('yoinking current line')
+  elseif current_mode == 'v' then
+    -- get visual selection
+    local v = api.nvim_get_vvar('visual_selection')
+    print(v)
+  end
+end
+
+local function select()
+  local current_line = api.nvim_get_current_line()
+  current_yoink = current_line
+end
+
+local function paste()
   if window_open then
     local current_line = api.nvim_get_current_line()
     close_window()
@@ -133,19 +133,19 @@ local function paste_yoink()
   end
 end
 
-local function open_yoink()
+local function open()
   open_window()
-  update_view()
+  update()
   set_mappings()
   api.nvim_win_set_cursor(win, { 1, 0 })
 end
 
 return {
-  open_yoink = open_yoink,
-  update_view = update_view,
-  save_yoink = save_yoink,
-  select_yoink = select_yoink,
-  paste_yoink = paste_yoink,
+  open = open,
+  update = update,
+  save = save,
+  select = select,
+  paste = paste,
   move_cursor = move_cursor,
   close_window = close_window,
 }

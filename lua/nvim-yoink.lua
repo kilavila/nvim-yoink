@@ -1,7 +1,7 @@
 local api = vim.api
 local buf, win
 
-local current_yoink = nil
+local current_yoink = ''
 local yoinks = {}
 local window_open = false
 
@@ -119,7 +119,11 @@ local function paste()
     close_window()
     api.nvim_put({ current_line }, '', true, true)
   else
-    api.nvim_put({ current_yoink }, '', true, true)
+    if current_yoink == '' then
+      return
+    else
+      api.nvim_put({ current_yoink }, '', true, true)
+    end
   end
 end
 

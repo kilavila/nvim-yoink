@@ -102,8 +102,8 @@ end
 local function set_mappings()
   local mappings = {
     ['<esc>'] = 'close_window()',
-    ['<cr>']  = 'select_yoink()',
-    p         = 'paste_yoink()',
+    ['<cr>']  = 'select()',
+    p         = 'paste()',
   }
 
   for k, v in pairs(mappings) do

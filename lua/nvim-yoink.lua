@@ -61,7 +61,6 @@ end
 local function save_list()
   yoinks = {}
 
-  -- get all lines in window
   for _, line in ipairs(api.nvim_buf_get_lines(buf, 0, -1, false)) do
     if line ~= '' then
       table.insert(yoinks, line)
@@ -95,6 +94,12 @@ local function close_window()
   api.nvim_win_close(win, true)
 end
 
+local function select()
+  local current_line = api.nvim_get_current_line()
+  vim.fn.setreg('*', current_line)
+  close_window()
+end
+
 local function move_cursor()
   local new_pos = math.max(4, api.nvim_win_get_cursor(win)[1] - 1)
   api.nvim_win_set_cursor(win, { new_pos, 0 })
@@ -103,6 +108,8 @@ end
 local function set_mappings()
   local mappings = {
     ['<esc>'] = 'close_window()',
+    ['<cr>'] = 'select()',
+    yy = 'select()',
   }
 
   for k, v in pairs(mappings) do
@@ -123,6 +130,7 @@ return {
   open = open,
   update = update,
   save = save,
+  select = select,
   move_cursor = move_cursor,
   close_window = close_window,
 }

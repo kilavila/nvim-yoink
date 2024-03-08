@@ -96,8 +96,8 @@ end
 
 local function select()
   local current_line = api.nvim_get_current_line()
-  vim.fn.setreg('"*', current_line)
-  vim.fn.setreg('"0', current_line)
+  vim.fn.setreg('+', current_line)
+  vim.fn.setreg('*', current_line)
   close_window()
 end
 

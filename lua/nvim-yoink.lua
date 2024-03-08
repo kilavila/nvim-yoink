@@ -1,7 +1,7 @@
 local api = vim.api
 local buf, win
 
-local currentYoink = nil
+local current_yoink = nil
 local yoinks = {}
 local window_open = false
 
@@ -69,10 +69,14 @@ end
 local function save_yoink()
   local current_mode = vim.api.nvim_get_mode().mode
 
-  if current_mode == 'n' then
-    print('yoink not saved, you are in normal mode')
+  if current_mode == 'n' or current_mode == 'i' then
+    local current_line = api.nvim_get_current_line()
+    table.insert(yoinks, current_line)
+    print('yoinking current line')
   elseif current_mode == 'v' then
-    print('yoink not saved, you are in visual mode')
+    local lines = api.nvim_buf_get_lines(0, vim.api.nvim_win_get_cursor(0)[1] - 1, vim.api.nvim_win_get_cursor(0)[1], true)
+    table.insert(yoinks, table.concat(lines, '\n'))
+    print('yoinking selected lines')
   end
 end
 

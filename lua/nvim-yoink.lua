@@ -120,7 +120,7 @@ local function set_mappings()
   end ]]
 end
 
-local function open()
+local function open_yoink()
   open_window()
   update_view()
   set_mappings()
@@ -128,7 +128,7 @@ local function open()
 end
 
 return {
-  open = open,
+  open_yoink = open_yoink,
   update_view = update_view,
   save_yoink = save_yoink,
   select_yoink = select_yoink,

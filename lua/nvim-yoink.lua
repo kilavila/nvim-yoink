@@ -1,7 +1,6 @@
 local api = vim.api
 local buf, win
 
-local current_yoink = ''
 local yoinks = {}
 local window_open = false
 
@@ -59,6 +58,15 @@ local function open_window()
   api.nvim_win_set_option(win, 'cursorline', true)
 end
 
+local function save_list()
+  yoinks = {}
+
+  -- get all lines in window
+  for _, line in ipairs(api.nvim_buf_get_lines(buf, 0, -1, false)) do
+    table.insert(yoinks, line)
+  end
+end
+
 local function update()
   api.nvim_buf_set_option(buf, 'modifiable', true)
 
@@ -69,20 +77,10 @@ end
 local function save()
   local current_mode = vim.api.nvim_get_mode().mode
 
-  if current_mode == 'n' or current_mode == 'i' then
+  if current_mode == 'n' then
     local current_line = api.nvim_get_current_line()
     table.insert(yoinks, current_line)
-    print('yoinking current line')
-  elseif current_mode == 'v' then
-    -- get visual selection
-    local v = api.nvim_get_vvar('visual_selection')
-    print(v)
   end
-end
-
-local function select()
-  local current_line = api.nvim_get_current_line()
-  current_yoink = current_line
 end
 
 local function close_window()
@@ -91,6 +89,7 @@ local function close_window()
   end
   window_open = false
 
+  save_list()
   api.nvim_win_close(win, true)
 end
 
@@ -102,28 +101,12 @@ end
 local function set_mappings()
   local mappings = {
     ['<esc>'] = 'close_window()',
-    ['<cr>']  = 'select()',
-    p         = 'paste()',
   }
 
   for k, v in pairs(mappings) do
     api.nvim_buf_set_keymap(buf, 'n', k, ':lua require"nvim-yoink".' .. v .. '<cr>', {
       nowait = true, noremap = true, silent = true
     })
-  end
-end
-
-local function paste()
-  if window_open then
-    local current_line = api.nvim_get_current_line()
-    close_window()
-    api.nvim_put({ current_line }, '', true, true)
-  else
-    if current_yoink == '' then
-      return
-    else
-      api.nvim_put({ current_yoink }, '', true, true)
-    end
   end
 end
 
@@ -138,8 +121,6 @@ return {
   open = open,
   update = update,
   save = save,
-  select = select,
-  paste = paste,
   move_cursor = move_cursor,
   close_window = close_window,
 }

@@ -63,7 +63,9 @@ local function save_list()
 
   -- get all lines in window
   for _, line in ipairs(api.nvim_buf_get_lines(buf, 0, -1, false)) do
-    table.insert(yoinks, line)
+    if line ~= '' then
+      table.insert(yoinks, line)
+    end
   end
 end
 

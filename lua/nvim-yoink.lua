@@ -96,9 +96,19 @@ end
 
 local function select()
   local current_line = api.nvim_get_current_line()
+  close_window()
+  api.nvim_put({current_line}, 'l', true, true)
+end
+
+local function yoink_all()
+  api.nvim_command('normal ggVG"+y')
+  close_window()
+end
+
+local function yoink()
+  local current_line = api.nvim_get_current_line()
   vim.fn.setreg('+', current_line)
   vim.fn.setreg('*', current_line)
-  close_window()
 end
 
 local function move_cursor()
@@ -110,7 +120,8 @@ local function set_mappings()
   local mappings = {
     ['<esc>'] = 'close_window()',
     ['<cr>'] = 'select()',
-    yy = 'select()',
+    yy = 'yoink()',
+    Y = 'yoink_all()',
   }
 
   for k, v in pairs(mappings) do
@@ -132,6 +143,8 @@ return {
   update = update,
   save = save,
   select = select,
+  yoink = yoink,
+  yoink_all = yoink_all,
   move_cursor = move_cursor,
   close_window = close_window,
 }

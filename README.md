@@ -16,7 +16,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim)
 ```
 
 ## Keymaps
-Copy current link yo Yoink with `:YoinkSave`
+Copy current line to Yoink with `:YoinkSave`
 
 Open Yoink window with `:YoinkOpen`
 

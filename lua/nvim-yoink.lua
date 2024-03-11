@@ -82,13 +82,15 @@ end
 
 local function visual_line_save()
   api.nvim_command('normal! gv"-y<cr>')
-  -- get register "- as a string
-  local reg = vim.fn.getreg('-')
 
-  if reg == '' then
-    return
+  local reg = vim.fn.getreg('-')
+  local lines = vim.split(reg, '\n')
+
+  for _, line in ipairs(lines) do
+    if line ~= '' then
+      table.insert(yoinks, line)
+    end
   end
-  table.insert(yoinks, reg)
 end
 
 local function close_window()

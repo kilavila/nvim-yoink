@@ -78,9 +78,24 @@ end
 local function save()
   local current_mode = vim.api.nvim_get_mode().mode
 
+  print(current_mode)
+
   if current_mode == 'n' then
     local current_line = api.nvim_get_current_line()
     table.insert(yoinks, current_line)
+  elseif current_mode == 'v' then
+    -- get only selection from buffer
+    local start_row, start_col = unpack(api.nvim_buf_get_mark(buf, '<'))
+    local end_row, end_col = unpack(api.nvim_buf_get_mark(buf, '>'))
+    if start_row > end_row then
+      start_row, end_row = end_row, start_row
+    end
+    if start_col > end_col then
+      start_col, end_col = end_col, start_col
+    end
+
+    local selected_text = api.nvim_buf_get_text(buf, start_row, start_col, end_row, end_col, {})[1]
+    table.insert(yoinks, selected_text)
   end
 end
 

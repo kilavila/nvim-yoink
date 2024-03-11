@@ -76,7 +76,7 @@ local function update()
 end
 
 local function save()
-  local current_mode = vim.api.nvim_get_mode().mode
+  local current_mode = vim.fn.mode()
 
   print(current_mode)
 

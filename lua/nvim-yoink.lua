@@ -81,16 +81,20 @@ local function save()
 end
 
 local function visual_save()
-  local start_row, start_col = unpack(api.nvim_buf_get_mark(buf, '<'))
-  local end_row, end_col = unpack(api.nvim_buf_get_mark(buf, '>'))
+  local curr_buf = api.nvim_get_current_buf()
+
+  local start_row, start_col = unpack(api.nvim_buf_get_mark(curr_buf, '<'))
+  local end_row, end_col = unpack(api.nvim_buf_get_mark(curr_buf, '>'))
+
   if start_row > end_row then
     start_row, end_row = end_row, start_row
   end
+
   if start_col > end_col then
     start_col, end_col = end_col, start_col
   end
 
-  local selected_text = api.nvim_buf_get_text(buf, start_row, start_col, end_row, end_col, {})[1]
+  local selected_text = api.nvim_buf_get_text(curr_buf, start_row, start_col, end_row, end_col, {})[1]
   table.insert(yoinks, selected_text)
 end
 

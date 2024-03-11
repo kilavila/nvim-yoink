@@ -80,22 +80,14 @@ local function save()
   table.insert(yoinks, current_line)
 end
 
-local function visual_save()
-  local curr_buf = api.nvim_get_current_buf()
+local function visual_line_save()
+  local curr_lines = api.nvim_buf_get_lines(0, api.nvim_win_get_cursor(0)[1] - 1, api.nvim_win_get_cursor(0)[1], false)
 
-  local start_row, start_col = unpack(api.nvim_buf_get_mark(curr_buf, '<'))
-  local end_row, end_col = unpack(api.nvim_buf_get_mark(curr_buf, '>'))
-
-  if start_row > end_row then
-    start_row, end_row = end_row, start_row
+  for _, line in ipairs(curr_lines) do
+    if line ~= '' then
+      table.insert(yoinks, line)
+    end
   end
-
-  if start_col > end_col then
-    start_col, end_col = end_col, start_col
-  end
-
-  local selected_text = api.nvim_buf_get_text(curr_buf, start_row, start_col, end_row, end_col, {})[1]
-  table.insert(yoinks, selected_text)
 end
 
 local function close_window()
@@ -156,7 +148,7 @@ return {
   open = open,
   update = update,
   save = save,
-  visual_save = visual_save,
+  visual_line_save = visual_line_save,
   select = select,
   yoink = yoink,
   yoink_all = yoink_all,

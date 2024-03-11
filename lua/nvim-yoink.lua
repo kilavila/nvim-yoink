@@ -75,12 +75,12 @@ local function update()
   api.nvim_buf_set_option(buf, 'modifiable', true)
 end
 
-local function save()
-  local current_mode = vim.fn.mode()
+local function save(curr_mode)
+  -- local current_mode = vim.fn.mode()
 
-  print(current_mode)
+  print('yoink mode: ' .. curr_mode)
 
-  if current_mode == 'n' then
+  if curr_mode == 'n' then
     local current_line = api.nvim_get_current_line()
     table.insert(yoinks, current_line)
   -- elseif current_mode == 'v' then

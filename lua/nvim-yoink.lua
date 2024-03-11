@@ -58,8 +58,12 @@ local function open_window()
   api.nvim_win_set_option(win, 'cursorline', true)
 end
 
-local function save_list()
+local function clear_list()
   yoinks = {}
+end
+
+local function save_list()
+  clear_list()
 
   for _, line in ipairs(api.nvim_buf_get_lines(buf, 0, -1, false)) do
     if line ~= '' then
@@ -150,6 +154,7 @@ end
 return {
   open = open,
   update = update,
+  clear_list = clear_list,
   save = save,
   visual_save = visual_save,
   select = select,

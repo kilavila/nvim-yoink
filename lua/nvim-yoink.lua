@@ -75,28 +75,23 @@ local function update()
   api.nvim_buf_set_option(buf, 'modifiable', true)
 end
 
-local function save(curr_mode)
-  -- local current_mode = vim.fn.mode()
+local function save()
+  local current_line = api.nvim_get_current_line()
+  table.insert(yoinks, current_line)
+end
 
-  print('yoink mode: ' .. curr_mode)
-
-  if curr_mode == 'n' then
-    local current_line = api.nvim_get_current_line()
-    table.insert(yoinks, current_line)
-  -- elseif current_mode == 'v' then
-  --   -- get only selection from buffer
-  --   local start_row, start_col = unpack(api.nvim_buf_get_mark(buf, '<'))
-  --   local end_row, end_col = unpack(api.nvim_buf_get_mark(buf, '>'))
-  --   if start_row > end_row then
-  --     start_row, end_row = end_row, start_row
-  --   end
-  --   if start_col > end_col then
-  --     start_col, end_col = end_col, start_col
-  --   end
-
-  --   local selected_text = api.nvim_buf_get_text(buf, start_row, start_col, end_row, end_col, {})[1]
-  --   table.insert(yoinks, selected_text)
+local function visual_save()
+  local start_row, start_col = unpack(api.nvim_buf_get_mark(buf, '<'))
+  local end_row, end_col = unpack(api.nvim_buf_get_mark(buf, '>'))
+  if start_row > end_row then
+    start_row, end_row = end_row, start_row
   end
+  if start_col > end_col then
+    start_col, end_col = end_col, start_col
+  end
+
+  local selected_text = api.nvim_buf_get_text(buf, start_row, start_col, end_row, end_col, {})[1]
+  table.insert(yoinks, selected_text)
 end
 
 local function close_window()
@@ -112,7 +107,7 @@ end
 local function select()
   local current_line = api.nvim_get_current_line()
   close_window()
-  api.nvim_put({current_line}, '', true, true)
+  api.nvim_put({ current_line }, '', true, true)
 end
 
 local function yoink_all()
@@ -157,6 +152,7 @@ return {
   open = open,
   update = update,
   save = save,
+  visual_save = visual_save,
   select = select,
   yoink = yoink,
   yoink_all = yoink_all,

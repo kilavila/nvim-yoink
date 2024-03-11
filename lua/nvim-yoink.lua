@@ -80,7 +80,7 @@ local function save()
   table.insert(yoinks, current_line)
 end
 
-local function visual_line_save()
+local function visual_save()
   api.nvim_command('normal! gv"-y<cr>')
 
   local reg = vim.fn.getreg('-')
@@ -151,7 +151,7 @@ return {
   open = open,
   update = update,
   save = save,
-  visual_line_save = visual_line_save,
+  visual_save = visual_save,
   select = select,
   yoink = yoink,
   yoink_all = yoink_all,

@@ -60,10 +60,11 @@ end
 
 local function clear_list()
   yoinks = {}
+  print('Cleared yoinks list')
 end
 
 local function save_list()
-  clear_list()
+  yoinks = {}
 
   for _, line in ipairs(api.nvim_buf_get_lines(buf, 0, -1, false)) do
     if line ~= '' then
@@ -82,6 +83,7 @@ end
 local function save()
   local current_line = api.nvim_get_current_line()
   table.insert(yoinks, current_line)
+  print('Yoinked current line')
 end
 
 local function visual_save()
@@ -95,6 +97,7 @@ local function visual_save()
       table.insert(yoinks, line)
     end
   end
+  print('Yoinked selection')
 end
 
 local function close_window()
@@ -116,6 +119,7 @@ end
 local function yoink_all()
   api.nvim_command('normal ggVG"+y')
   close_window()
+  print('Yoinked all lines')
 end
 
 local function yoink()
